@@ -19,7 +19,7 @@ const About = () => {
         <div className="grid lg:grid-cols-[55%_45%] gap-[60px] items-start">
           <div className="relative group overflow-hidden border border-border bg-accent max-w-[450px]">
             <img 
-              src="/src/assets/profile.jpeg" 
+              src="/profile.jpeg" 
               alt="Shrisai Kolkondi" 
               className="w-full h-[550px] object-cover filter grayscale-[20%] group-hover:grayscale-0 transition-all duration-[400ms]"
               onError={(e) => {
