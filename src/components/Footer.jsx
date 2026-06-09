@@ -1,4 +1,5 @@
 import { motion } from 'framer-motion';
+import TextDistortion from './TextDistortion';
 
 const Footer = () => {
   return (
@@ -29,10 +30,11 @@ const Footer = () => {
       </div>
 
       {/* Watermark */}
-      <div className="flex justify-center select-none pointer-events-none pb-20">
-        <h1 className="text-[15vw] md:text-[20vw] font-[900] text-white/[0.02] leading-none uppercase tracking-tighter">
-          SHRISAI
-        </h1>
+      <div className="flex justify-center select-none pb-20 overflow-hidden">
+        <TextDistortion 
+          text="SHRISAI" 
+          className="text-[15vw] md:text-[20vw] font-[900] text-white/[0.05] hover:text-white/10 transition-colors leading-none uppercase tracking-tighter" 
+        />
       </div>
     </footer>
   );

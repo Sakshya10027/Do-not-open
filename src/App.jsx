@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import Lenis from '@studio-freight/lenis';
 import Navbar from './components/Navbar';
 import Hero from './components/Hero';
@@ -11,12 +11,17 @@ import Contact from './components/Contact';
 import Footer from './components/Footer';
 import CustomCursor from './components/CustomCursor';
 import BackgroundEffect from './components/BackgroundEffect';
+import Preloader from './components/Preloader';
 
-import { motion, useScroll, useSpring, useTransform } from 'framer-motion';
+import { motion, AnimatePresence, useScroll, useSpring, useTransform } from 'framer-motion';
 import { ArrowUp } from 'lucide-react';
 
 function App() {
+  const [isLoading, setIsLoading] = useState(true);
+
   useEffect(() => {
+    if (isLoading) return;
+
     const lenis = new Lenis({
       duration: 1.2,
       easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
@@ -51,35 +56,51 @@ function App() {
   const opacity = useTransform(scrollYProgress, [0, 0.1], [0, 1]);
 
   return (
-    <div className="bg-background min-h-screen text-primary selection:bg-primary selection:text-background relative">
-      <div className="bg-grid" />
-      <div className="bg-noise" />
-      <BackgroundEffect />
-      <div className="loading-bar" />
+    <>
+      <AnimatePresence mode="wait">
+        {isLoading && <Preloader onLoadingComplete={() => setIsLoading(false)} />}
+      </AnimatePresence>
 
-      <CustomCursor />
-      <Navbar />
-      
-      <main className="relative">
-        <Hero />
-        <About />
-        <Academics />
-        <TechStack />
-        <Experience />
-        <Projects />
-        <Contact />
-      </main>
+      <div className={`bg-background min-h-screen text-primary selection:bg-primary selection:text-background relative ${isLoading ? 'h-screen overflow-hidden' : ''}`}>
+        <div className="bg-grid" />
+        <div className="bg-noise" />
+        <BackgroundEffect />
+        <div className="loading-bar" />
 
-      <Footer />
+        <CustomCursor />
+        {!isLoading && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.5, delay: 0.2 }}
+          >
+            <Navbar />
+            
+            <main className="relative">
+              <Hero />
+              <About />
+              <Academics />
+              <TechStack />
+              <Experience />
+              <Projects />
+              <Contact />
+            </main>
 
-      <motion.button
-        style={{ opacity }}
-        onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
-        className="fixed bottom-8 right-8 p-4 bg-primary text-background rounded-full z-50 hover:scale-110 transition-transform shadow-xl"
-      >
-        <ArrowUp size={24} />
-      </motion.button>
-    </div>
+            <Footer />
+
+            <motion.button
+              style={{ opacity }}
+              initial={{ opacity: 0 }}
+              animate={{ opacity: window.scrollY > 100 ? 1 : 0 }}
+              onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
+              className="fixed bottom-8 right-8 p-4 bg-primary text-background rounded-full z-50 hover:scale-110 transition-transform shadow-xl"
+            >
+              <ArrowUp size={24} />
+            </motion.button>
+          </motion.div>
+        )}
+      </div>
+    </>
   );
 }
 
